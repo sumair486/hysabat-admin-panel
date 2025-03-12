@@ -1,0 +1,13 @@
+.custom-segmented .ant-segmented-item {
+	color: #728694 !important;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.custom-segmented .ant-segmented-item-selected {
+	background-color: #0096ff !important;
+	color: white !important;
+}

@@ -1,31 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 
 export default function PrimaryLayout() {
+	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [isMobile, setIsMobile] = useState(false);
+
+	const checkScreenSize = () => {
+		setIsMobile(window.innerWidth < 768);
+
+		if (window.innerWidth < 768) {
+			setSidebarOpen(false);
+		} else {
+			setSidebarOpen(true);
+		}
+	};
+
+	useEffect(() => {
+		checkScreenSize();
+
+		window.addEventListener("resize", checkScreenSize);
+
+		return () => window.removeEventListener("resize", checkScreenSize);
+	}, []);
+
+	const toggleSidebar = () => {
+		setSidebarOpen(!sidebarOpen);
+	};
+
 	return (
-		<main className="">
-			<nav className="flex items-center justify-between bg-gray-500 px-20 py-8">
-				<div className="">logo</div>
-				<div className="flex gap-x-4">
-					<Link
-						className="cursor-pointer hover:text-blue-400 hover:underline"
-						to="/"
-					>
-						Home
-					</Link>
-					<Link
-						className="cursor-pointer hover:text-blue-400 hover:underline"
-						to="/about"
-					>
-						About us
-					</Link>
-				</div>
-			</nav>
-			<div className="px-20">
-				<Outlet />
+		<div className="h-screen overflow-hidden bg-gray-50">
+			{sidebarOpen && isMobile && (
+				<div
+					className="fixed inset-0 z-10 bg-black bg-opacity-50"
+					onClick={toggleSidebar}
+				></div>
+			)}
+
+			<Sidebar isOpen={sidebarOpen} isMobile={isMobile} />
+
+			<div
+				className={`flex h-screen flex-col transition-all duration-300 ${
+					isMobile
+						? "w-full"
+						: sidebarOpen
+							? "md:ml-52 lg:ml-52 xl:ml-52"
+							: "ml-0"
+				}`}
+			>
+				<Header
+					toggleSidebar={toggleSidebar}
+					sidebarOpen={sidebarOpen}
+					isMobile={isMobile}
+				/>
+
+				{/* content  */}
+				<main className="flex-1 overflow-auto p-2 sm:p-4">
+					<Outlet />
+				</main>
 			</div>
-			<footer className="px-20">my footer component</footer>
-		</main>
+		</div>
 	);
 }

@@ -5,6 +5,7 @@ const Home = lazy(() => import("../pages/Home"));
 
 // About imports
 const About = lazy(() => import("../pages/About"));
+const Sale = lazy(() => import("../pages/sale/saleInvoice"));
 
 // Services imports
 const Services = lazy(() => import("../pages/services/Services"));
@@ -27,6 +28,11 @@ export const routes = [
 	{
 		path: "/Services",
 		element: <Services />,
+		isPrivate: true,
+	},
+	{
+		path: "/sales/invoice",
+		element: <Sale />,
 		isPrivate: true,
 	},
 	{
